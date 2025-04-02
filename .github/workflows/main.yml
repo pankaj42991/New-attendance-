@@ -3,7 +3,10 @@ name: Android APK Build
 on:
   push:
     branches:
-      - main  # Yahan apni main branch ka naam confirm karein
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -14,33 +17,29 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Setup Java Environment
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'  # Apni project ki required Java version yahan set karein
+          java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Grant execute permission to Gradle
+      - name: Grant execute permission for Gradle
         run: chmod +x gradlew
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
       - name: Upload Debug APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
 
       - name: Build Release APK
         run: ./gradlew assembleRelease
 
       - name: Upload Release APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: release-apk
-          path: app/build/outputs/apk/release/*.apk
-          
+          path: app/build/outputs/apk/release/app-release.apk
