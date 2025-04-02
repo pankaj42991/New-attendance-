@@ -7,21 +7,14 @@ on:
 
 jobs:
   build:
-    name: Build APK
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
 
@@ -29,20 +22,16 @@ jobs:
         run: npm install
 
       - name: Install Expo CLI
-        run: npm install -g expo-cli eas-cli
+        run: npm install -g expo-cli
 
       - name: Login to Expo
-        run: eas login --token ${{ secrets.EXPO_TOKEN }}
-
-      - name: Initialize EAS
-        run: eas init
+        run: expo login -u "${{ secrets.EXPO_USERNAME }}" -p "${{ secrets.EXPO_PASSWORD }}"
 
       - name: Build APK
-        run: eas build --profile preview --platform android --non-interactive
+        run: expo build:android -t apk
 
       - name: Upload Artifact
-  uses: actions/upload-artifact@v3
-  with:
-    name: android-apk
-    path: build/**/*.apk
-    
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: dist/*.apk
