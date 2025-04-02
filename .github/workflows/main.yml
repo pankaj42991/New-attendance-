@@ -3,10 +3,8 @@ name: Android APK Build
 on:
   push:
     branches:
-      - main
+      - main  # Jab main branch par commit hoga, tab yeh workflow chalega
   pull_request:
-    branches:
-      - main
 
 jobs:
   build:
@@ -15,26 +13,11 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # Latest version use karein
 
-      - name: Setup Java
-        uses: actions/setup-java@v3
+      - name: Setup Java Environment
+        uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: 'zulu'  # OpenJDK Zulu
           java-version: '17'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
-
-      - name: Grant Permissions to Gradlew
-        run: chmod +x gradlew
-
-      - name: Build APK
-        run: ./gradlew assembleDebug
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: app-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
           
