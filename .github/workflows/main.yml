@@ -24,32 +24,24 @@ jobs:
           java-version: '17'
 
       - name: Check Files in Repository
-        run: ls -la && ls -la app/
+        run: ls -la && ls -la android/
 
       - name: Ensure Gradle Wrapper Exists
         run: |
-          if [ ! -f "./gradlew" ] && [ ! -f "./app/gradlew" ]; then
+          if [ ! -f "./gradlew" ] && [ ! -f "./android/gradlew" ]; then
             echo "❌ ERROR: gradlew not found! Make sure it exists in the repo."
             exit 1
           fi
 
       - name: Grant execute permission for Gradle
-        run: chmod +x ./gradlew || chmod +x ./app/gradlew
+        run: chmod +x ./gradlew || chmod +x ./android/gradlew
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug || ./app/gradlew assembleDebug
+        run: ./gradlew assembleDebug || ./android/gradlew assembleDebug
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
-
-      - name: Build Release APK
-        run: ./gradlew assembleRelease || ./app/gradlew assembleRelease
-
-      - name: Upload Release APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-apk
-          path: app/build/outputs/apk/release/app-release.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          
