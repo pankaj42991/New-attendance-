@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APK with EAS
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
@@ -21,17 +21,17 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Install Expo CLI
-        run: npm install -g expo-cli
+      - name: Install Expo & EAS CLI
+        run: npm install -g expo eas-cli
 
-      - name: Login to Expo
-        run: expo login -u "${{ secrets.EXPO_USERNAME }}" -p "${{ secrets.EXPO_PASSWORD }}"
+      - name: Authenticate with Expo
+        run: eas login --token ${{ secrets.EXPO_TOKEN }}
 
-      - name: Build APK
-        run: expo build:android -t apk
+      - name: Build APK with EAS
+        run: eas build --platform android --profile preview --non-interactive
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: dist/*.apk
+          path: ./builds/*.apk
