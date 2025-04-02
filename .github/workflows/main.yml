@@ -23,21 +23,18 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Check Files in Repository
-        run: ls -la && ls -la android/
-
-      - name: Ensure Gradle Wrapper Exists
+      - name: Check if Android Folder Exists
         run: |
-          if [ ! -f "./gradlew" ] && [ ! -f "./android/gradlew" ]; then
-            echo "❌ ERROR: gradlew not found! Make sure it exists in the repo."
+          if [ ! -d "android" ]; then
+            echo "❌ ERROR: Android folder missing! Run 'npx react-native eject' locally."
             exit 1
           fi
 
       - name: Grant execute permission for Gradle
-        run: chmod +x ./gradlew || chmod +x ./android/gradlew
+        run: chmod +x android/gradlew
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug || ./android/gradlew assembleDebug
+        run: cd android && ./gradlew assembleDebug
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
