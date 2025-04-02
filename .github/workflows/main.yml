@@ -23,9 +23,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set Up Gradle
-        run: |
-          chmod +x gradlew || chmod +x ./app/gradlew
+      - name: Ensure Gradle Wrapper Exists
+        run: ls -la && ls -la app/
+
+      - name: Grant execute permission for Gradle
+        run: chmod +x ./gradlew || chmod +x ./app/gradlew || echo "gradlew not found"
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug || ./app/gradlew assembleDebug
