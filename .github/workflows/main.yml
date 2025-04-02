@@ -23,11 +23,18 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Ensure Gradle Wrapper Exists
+      - name: Check Files in Repository
         run: ls -la && ls -la app/
 
+      - name: Ensure Gradle Wrapper Exists
+        run: |
+          if [ ! -f "./gradlew" ] && [ ! -f "./app/gradlew" ]; then
+            echo "❌ ERROR: gradlew not found! Make sure it exists in the repo."
+            exit 1
+          fi
+
       - name: Grant execute permission for Gradle
-        run: chmod +x ./gradlew || chmod +x ./app/gradlew || echo "gradlew not found"
+        run: chmod +x ./gradlew || chmod +x ./app/gradlew
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug || ./app/gradlew assembleDebug
